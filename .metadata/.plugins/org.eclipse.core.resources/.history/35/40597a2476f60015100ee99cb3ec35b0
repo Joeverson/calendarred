@@ -1,0 +1,62 @@
+package br.edu.ifpb.calendarred.beans;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+
+@ManagedBean(name = "agenda")
+@SessionScoped
+public class Agenda {
+	private List<Cadastro> contatos;
+	
+	private Cadastro contato;
+
+	public List<Cadastro> getContatos() {
+		return contatos;
+	}
+	
+	@PostConstruct
+	public void init() {		
+		this.contatos = new ArrayList<Cadastro>();		
+	}
+
+	public void excluir(Cadastro c) {
+		this.contatos.remove(c);
+	}
+	
+	public String editar(Cadastro c) {
+		this.contato = c;
+		return "cadastrar";
+	}
+	
+	public String atualizar(){
+		//this.contatos.remove(this.contatos.indexOf(this.contato));
+		this.contatos.set(this.contatos.indexOf(this.contato), this.contato);		
+		this.contato = null;
+		
+		return "index";
+	}
+	
+	public void setContato(Cadastro c) {
+		this.contato = c;
+	}
+	
+	public Cadastro getContato() {
+		return this.contato;
+	}
+	
+	public void setContatos(List<Cadastro> contatos) {
+		this.contatos = contatos;
+	}
+		
+	public String cadastrar(Cadastro c){		
+		this.contatos.add(c);
+		
+		return "index";
+	}
+	
+}

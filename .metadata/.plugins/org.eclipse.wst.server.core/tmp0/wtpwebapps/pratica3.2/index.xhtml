@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:fn="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<title>Contatos</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+		integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+		crossorigin="anonymous" />
+
+	<!-- Optional theme -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+		integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+		crossorigin="anonymous" />
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+		integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+		crossorigin="anonymous"></script>
+
+	<style>
+body {
+	background-color: #F44336;
+}
+</style>
+</h:head>
+<h:body>
+	<h:messages globalOnly="true" />
+	<div class="container">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<h:form id="form">
+					<div style="text-align: center; margin: 50px 0; font-size:60px;">
+						<p style="">Calendar Red</p>
+					</div>
+					<div class="col-md-3">
+						<h:commandButton id="add" value="Criar Conta"
+							action="cadastrar?faces-redirect=true" class="btn btn-default" />
+					</div>
+					<div class="col-md-3">
+						<h:commandButton id="addH" value="Adicionar feriado"
+							action="holydays?faces-redirect=true" class="btn btn-default" />
+					</div>
+					<div class="col-md-3">
+						<h:commandButton id="addN" value="Adicionar notação"
+							action="notes?faces-redirect=true" class="btn btn-default" />
+					</div>
+					<div class="col-md-3">
+						<h:commandButton id="addl" value="Login"
+							action="login?faces-redirect=true" class="btn btn-default" />
+					</div>
+
+				</h:form>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col-md-offset-2 col-md-8">
+				<h:form>
+					<div class="col-md-9">
+						<h:inputText id="date" value="#{calendario.date}" size="20"
+							required="true" label="Data" class="form-control" style=""
+							placeholder="Informe a data que queira ver dd/mm/yyyy">
+							<fn:convertDateTime pattern="d/M/yyyy"
+								timeZone="America/Fortaleza" />
+						</h:inputText>
+					</div>
+					<div class="col-md-3">
+						<h:commandButton id="data" value="Ir"
+							actionListener="#{calendario.next}" class="btn btn-default" />
+						<h:message for="date" style="color:red" />
+					</div>
+				</h:form>
+			</div>
+		</div>
+		<h:form>
+			<h:dataTable value="#{calendario.model}" var="c" border="1"
+				class="table text-center"
+				style="margin-top:50px; background-color:white; border-collapse:collapse"
+				cellpadding="1">
+				<h:column class="text-center">
+					<h1>#{calendario.model.rowIndex + 1}</h1>
+					<small>#{c.weekDay}</small>
+				</h:column>
+				<h:column>
+					<fn:facet name="header">
+						<h1 class="">#{calendario.currentMounth} / #{calendario.currentYear}</h1>
+					</fn:facet>									
+					#{c.descricao}
+				</h:column>
+			</h:dataTable>
+		</h:form>
+	</div>
+</h:body>
+</html>

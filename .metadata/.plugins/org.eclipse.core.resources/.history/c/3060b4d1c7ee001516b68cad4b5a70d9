@@ -1,0 +1,16 @@
+package br.edu.ifpb.calendarred.beans;
+
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+
+import br.edu.ifpb.calendarred.model.CalendarWars;
+
+@ManagedBean(name="calendar")
+public class Calendar {
+	private List<CalendarWars> calendar;
+	
+	private List getMounth() {
+		return this.calendar;
+	}
+}

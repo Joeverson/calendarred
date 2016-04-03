@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;br.edu.ifpb.contatos.beans&apos; to &apos;br.edu.ifpb.calendarred.beans&apos;&#x0A;- Original project: &apos;pratica3.2&apos;&#x0A;- Original element: &apos;pratica3.2/src/br.edu.ifpb.contatos.beans&apos;&#x0A;- Renamed element: &apos;pratica3.2/src/br.edu.ifpb.calendarred.beans&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;br.edu.ifpb.contatos.beans&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;br.edu.ifpb.contatos.beans" name="br.edu.ifpb.calendarred.beans" qualified="false" references="true" stamp="1458337626178" textual="false" version="1.0"/>
+</session>

@@ -1,0 +1,46 @@
+package br.edu.ifpb.calendarred.dao;
+
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import org.jboss.logging.Logger;
+
+import antlr.collections.List;
+import br.edu.ifpb.calendarred.model.Holydays;
+
+public class HolydaysDAO extends GenericDAOJPAImpl<Holydays, Long>{
+	private static Logger logger = Logger.getLogger(HolydaysDAO.class);
+	
+	public HolydaysDAO(EntityManager instance){
+		super(instance);
+	}	
+	
+	/**
+	 * ano e mes podem ser o int mas o day é um Calendar.DAY_OF_MOUNTH para saber 
+	 * qual o ultimo dia do mes e assim buscar todos os dias do mes
+	 * **/
+	public ArrayList<Holydays> getMounth(String year, String mounth){
+				
+		try{			
+			return (ArrayList<Holydays>) super.getEntityManager().createQuery("select h from Holydays h where h.date like '%-%"+mounth+"-%' ").getResultList();			
+		}catch(Exception e){
+			System.out.println(e.getMessage());			
+		}		
+		return null;
+	}
+	
+	public ArrayList<Holydays> getMounth(String year, String mounth){
+		
+		try{			
+			return (ArrayList<Holydays>) super.getEntityManager().createQuery("select h from Holydays h where h.type = 'substituto' ").getResultList();			
+		}catch(Exception e){
+			System.out.println(e.getMessage());			
+		}		
+		return null;
+	}
+}

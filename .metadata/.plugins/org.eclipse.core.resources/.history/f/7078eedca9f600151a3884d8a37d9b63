@@ -1,0 +1,84 @@
+package br.edu.ifpb.calendarred.model;
+
+
+import java.io.IOException;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
+import javax.persistence.Column;
+import javax.persistence.Entity; 
+import javax.persistence.GeneratedValue; 
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import jdk.nashorn.internal.ir.annotations.Ignore;
+import br.edu.ifpb.calendarred.dao.PersistenceUtil;
+import br.edu.ifpb.calendarred.dao.UserDAO;
+
+@Entity
+@Table(name = "login")
+@ManagedBean(name="usuario")
+@SessionScoped
+public class User {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	@Column
+	private String user;
+	@Column
+	private String pass;
+	@Column
+	private String name;
+	@Ignore
+	private Boolean logado;
+	
+	
+	public Boolean getLogado() {
+		return logado;
+	}
+	public void setLogado(Boolean logado) {
+		this.logado = logado;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public String getPass() {
+		return pass;
+	}
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+	
+	public void redirect() throws IOException{
+		FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+	}
+	
+	public String login(){
+		UserDAO dao = new UserDAO(PersistenceUtil.getCurrentEntityManager());
+		User u = dao.auth(this.name, this.pass);
+		
+		if(u != null){
+			this.logado = true;
+		}			
+		
+		return "index.xhtml?faces-redirect=true";
+	}
+}

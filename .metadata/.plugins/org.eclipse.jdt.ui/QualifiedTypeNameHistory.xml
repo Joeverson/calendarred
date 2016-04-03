@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="br.edu.ifpb.calendarred.model.Note"/>
+<fullyQualifiedTypeName name="br.edu.ifpb.calendarred.model.Holydays"/>
+<fullyQualifiedTypeName name="br.edu.ifpb.calendarred.model.User"/>
+<fullyQualifiedTypeName name="br.edu.ifpb.calendarred.dao.ManagedEMContext"/>
+<fullyQualifiedTypeName name="br.edu.ifpb.calendarred.dao.PersistenceUtil"/>
+<fullyQualifiedTypeName name="javax.faces.bean.RequestScoped"/>
+<fullyQualifiedTypeName name="javax.faces.bean.ManagedBean"/>
+<fullyQualifiedTypeName name="javax.faces.bean.ViewScoped"/>
+<fullyQualifiedTypeName name="javax.faces.context.FacesContextFactory"/>
+<fullyQualifiedTypeName name="javax.faces.context.FacesContext"/>
+<fullyQualifiedTypeName name="javax.faces.application.FacesMessage"/>
+</qualifiedTypeNameHistroy>

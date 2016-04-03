@@ -1,0 +1,60 @@
+package br.edu.ifpb.calendarred.beans;
+
+import java.util.Calendar;
+import java.util.List;
+
+import br.edu.ifpb.calendarred.model.CalendarWars;
+import br.edu.ifpb.calendarred.model.Holydays;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
+
+@ManagedBean(name="calendario")
+public class Calendario {
+	private int day;
+	private List<CalendarWars> mounth;
+	private DataModel<CalendarWars> model;//model do faces
+	
+	public DataModel<CalendarWars> getModel() {
+		return model;
+	}
+
+	public void setModel(DataModel<CalendarWars> model) {
+		this.model = model;
+	}
+
+	@PostConstruct
+	public void init(){
+		Calendar c = Calendar.getInstance();
+		this.day = c.get(Calendar.DAY_OF_MONTH);
+		
+		
+		
+		//model para o data base rodar direito
+		model = new ListDataModel<CalendarWars>(mounth);
+		
+		
+	}
+
+	public int getDay() {
+		return day;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
+	public List<CalendarWars> getMounth() {
+		return mounth;
+	}
+
+	public void setMounth(List<CalendarWars> mounth) {
+		this.mounth = mounth;
+	}
+	
+		
+	
+	
+}

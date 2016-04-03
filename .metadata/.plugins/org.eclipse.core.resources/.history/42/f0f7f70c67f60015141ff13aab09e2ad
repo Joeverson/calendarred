@@ -1,0 +1,9 @@
+package br.edu.ifpb.calendarred.model;
+
+import java.util.Calendar;
+import java.util.Date;
+
+public interface CalendarWars {
+	public Calendar getDate();
+	public String getDescricao();
+}

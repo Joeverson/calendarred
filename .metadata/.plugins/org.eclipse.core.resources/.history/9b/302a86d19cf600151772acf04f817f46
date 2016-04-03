@@ -1,0 +1,229 @@
+package br.edu.ifpb.calendarred.beans;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import br.edu.ifpb.calendarred.dao.CalendarNotesDAO;
+import br.edu.ifpb.calendarred.dao.HolydaysDAO;
+import br.edu.ifpb.calendarred.dao.PersistenceUtil;
+import br.edu.ifpb.calendarred.model.CalendarWars;
+import br.edu.ifpb.calendarred.model.Holydays;
+import br.edu.ifpb.calendarred.model.Note;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.event.ActionEvent;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
+
+@ManagedBean(name="calendario")
+public class Calendario {
+	private int day;
+	private Date date;
+	private Calendar c;
+	private List<CalendarWars> mounth;
+	private String currentMounth;
+	private String currentYear;
+	
+	public String getCurrentYear() {
+		return currentYear;
+	}
+
+
+	public void setCurrentYear(String currentYear) {
+		this.currentYear = currentYear;
+	}
+
+	private DataModel<CalendarWars> model;//model do faces
+	
+	/** dias da semana**/
+	private static final String[] WEEKDAYS = new String[]{"Domingo", "Segunda","Terça", "Quarta", "Quinta", "Sexta", "Sábado"}; 
+
+	/** Meses**/
+	private static final String[] MOUNTHS = new String[]{"Janeiro", "Fevereiro","Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"}; 
+	
+	@PostConstruct
+	public void init(){
+		Calendar c = Calendar.getInstance();
+		this.c = c;
+		this.generateMounth();
+	}
+	
+	
+	public DataModel<CalendarWars> getModel() {
+		return model;
+	}
+
+	public void setModel(DataModel<CalendarWars> model) {
+		this.model = model;
+	}
+
+	public String getCurrentMounth() {
+		return currentMounth;
+	}
+
+	public void setCurrentMounth(String currentMounth) {
+		this.currentMounth = currentMounth;
+	}
+	
+	public int getDay() {
+		return day;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
+	public List<CalendarWars> getMounth() {
+		return mounth;
+	}
+
+	public void setMounth(List<CalendarWars> mounth) {
+		this.mounth = mounth;
+	}
+	
+	
+	public Date getDate() {
+		return date;
+	}
+
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public void next(ActionEvent e){
+		//convertendo para calendar
+		Calendar cal = Calendar.getInstance();
+		DateFormat format = new SimpleDateFormat("yyyy/mm/dd");
+		format.format(this.date);
+		cal = format.getCalendar();
+		this.c = cal;	
+		
+		//gerando o mes pedido
+		this.generateMounth();
+	}
+	/**
+	 * ----------------------------- ORGANIZADOR DE DATAS DO MES --------------------------
+	 * **/
+	
+
+	/**
+	 * pega as datas de um mes e ano especifico mas só holydays
+	 * **/
+	public void organizeHolydays(String year, String mounth){
+		
+		//adicionando o mes corrente
+		this.currentMounth = MOUNTHS[Integer.parseInt(mounth) - 1];
+		
+		this.currentYear = year;
+		
+		///colocando as datas no calendario recem gerado
+		HolydaysDAO hdao = new HolydaysDAO(PersistenceUtil.getEntityManager());
+
+		
+		for(Holydays h : hdao.getMounth(year, mounth)){ /** verificar se vem nullo**/			
+			// h.getDate().get(Calendar.DAY_OF_MONTH); => dia do mes			
+			h.setWeekDay(WEEKDAYS[h.getDate().get(Calendar.DAY_OF_WEEK) - 1]);
+			
+			if(h.getType().equals("fixo")){
+				for(Holydays holl: hdao.getMounthSubstituto(year, mounth)){
+					if(holl.getDt().compareTo(h.getDt()) != 0){
+						increment(h);
+					}
+				}								
+			}else if(h.getType().equals("movel") && h.getDate().get(Calendar.YEAR) == this.c.get(Calendar.YEAR)){
+				increment(h);
+			}else if(h.getType().equals("substituto") && h.getDate().get(Calendar.YEAR) == this.c.get(Calendar.YEAR)){
+				increment(h);
+			}			
+		}
+	}
+	
+	/**
+	 * methodo para colcoar os valores do db na lista do calendario
+	 * **/
+	private void increment(Holydays h){
+		//recuperando para saber se tem descricão nula 
+		CalendarWars hh = (CalendarWars) this.mounth.get(h.getDate().get(Calendar.DAY_OF_MONTH) - 1);
+		
+		if(hh.getDescricao() != null){
+			hh.setDescricao(hh.getDescricao()+" ||| "+h.getDescricao());				
+		}else{				
+			this.mounth.set(h.getDate().get(Calendar.DAY_OF_MONTH) - 1, h);
+		}
+	}
+	/**
+	 * pega as datas de um mes e ano especifico mas só notas
+	 * **/
+	
+	public void organizeNote(String year, String mounth){
+				
+		///colocando as datas no calendario recem gerado
+		CalendarNotesDAO ndao = new CalendarNotesDAO(PersistenceUtil.getEntityManager());
+
+		
+		for(Note n : ndao.getMounth(year, mounth)){ /** verificar se vem nullo**/			
+			// h.getDate().get(Calendar.DAY_OF_MONTH); => dia do mes			
+			n.setWeekDay(WEEKDAYS[n.getDate().get(Calendar.DAY_OF_WEEK) - 1]);
+			
+			//recuperando para saber se tem descricão nula 
+			CalendarWars nn = (CalendarWars) this.mounth.get(n.getDate().get(Calendar.DAY_OF_MONTH) - 1);
+			
+			
+			if(n != null)
+				if(nn.getDescricao() != null){
+					nn.setDescricao(nn.getDescricao()+" ||| "+n.getDescricao());				
+				}else{
+					this.mounth.set(n.getDate().get(Calendar.DAY_OF_MONTH) - 1, n);
+				}		
+		}
+	}
+	
+	public void generateMounth(){
+		
+		
+		//instanciando a lista de coisas do mês corrente
+		this.mounth = new ArrayList<CalendarWars>();
+		
+		//vendo qual o dia da semana do mês para poder contar
+		int weekDay = c.get(Calendar.DAY_OF_WEEK) - 1;
+		
+		//gerando todos os dias do mes escolhido 
+		for(int i=0; i < c.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
+			Holydays h = new Holydays();
+			
+			//fazendo com que ele rode sempre entre os dias da semana que esta num array
+			if(weekDay > 6)
+				weekDay = 0;
+			
+			//setando o dia da semana para ser recuperada no futuro
+			h.setWeekDay(WEEKDAYS[weekDay]);
+			
+			//adicionando os dias gerados no sistema.
+			this.mounth.add(h);			
+			
+			weekDay++;
+		}
+		
+		//pegando as informações do banco de dados referentes ao mês corrente.
+		this.organizeHolydays(String.valueOf(c.get(Calendar.YEAR)), String.valueOf(c.get(Calendar.MONTH) + 1));
+		this.organizeNote(String.valueOf(c.get(Calendar.YEAR)), String.valueOf(c.get(Calendar.MONTH) + 1));
+		
+		//model para o data base rodar direito
+		this.model = new ListDataModel<CalendarWars>(this.mounth);
+	}
+	
+	public static void main(String[] args) {
+		Calendario ca = new Calendario();
+		ca.init();
+		
+		HolydaysDAO hdao = new HolydaysDAO(PersistenceUtil.getEntityManager());
+		System.out.println(hdao.getMounthSubstituto("2016", "03"));;
+	}
+	
+}

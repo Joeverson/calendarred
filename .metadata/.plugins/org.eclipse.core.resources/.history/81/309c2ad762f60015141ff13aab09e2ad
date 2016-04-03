@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:fn="http://xmlns.jcp.org/jsf/core">
+<h:head>
+		<title>Calendar red</title>		
+</h:head>
+	<h:body>
+	<h:form id="formGoBack">			
+			<h:commandButton id="cal" value="Calendário" action="index?faces-redirect=true"/>													
+		</h:form>
+	<h:messages globalOnly="true"/>
+	<h3>Cadastrar nova nota</h3>
+	<h:form id="form">		
+		<p>data</p>	
+		<h:inputText id="date" value="#{note.dt}" 
+			size="20" required="true"
+			label="Data">
+			<fn:convertDateTime pattern="d/M/yyyy" timeZone="America/Fortaleza"/>
+		</h:inputText>
+		<h:message for="date" style="color:red"/>
+		
+		<p>Conteúdo</p>
+		<h:inputTextarea row="10" col="10" value="#{note.descricao}"/>
+		
+		<h:commandButton id="go" value="Cadastrar" actionListener="#{note.save}"/>			
+	</h:form>
+	
+	<f:if test="#{not empty holydays.dt}">		
+		#{note.dt} <br>
+		<b>SALVO</b>
+	</f:if> 		
+							
+	</h:body>
+</html>
+        
+        
